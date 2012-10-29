@@ -3,7 +3,8 @@
     {
         $tmpl = array ( 'table_open'  => '<table class = "teams_table">',
                         'heading_row_start'   => '<tr class = "teams_table_heading">',
-                         'row_start'           => '<tr class = "teams_table_row">');
+                        'row_start'           => '<tr class = "teams_table_row">',
+                        'row_alt_start'   =>  '<tr class = "teams_table_row">');
         $this->table->set_template($tmpl);
         $this->table->set_heading(array('id', 'Команда', 'Город', 'Тренер', 'Действия'));
         
