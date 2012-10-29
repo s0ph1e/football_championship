@@ -3,11 +3,15 @@
     border: 1px solid #DDD;
     border-collapse: separate;
     border-spacing: 2px;
+    margin: 10px 0;
 }
 .teams_table th, .teams_table td {
-    text-align: justify;
     padding: 5px;
     margin: 5px;
+    text-align: center;
+}
+.teams_table td { 
+    vertical-align: middle;
 }
 .teams_table_heading {
     background-color: #DDD;
@@ -17,4 +21,7 @@
 }
 .teams_table th{
     font-weight: bold;
+}
+img {
+    vertical-align: middle;
 }
