@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+	<!-- Basic Page Needs
+  ================================================== -->
+	<meta charset="utf-8">
+	<title>Football championship</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<!-- CSS
+  ================================================== -->
+    <?=link_tag('data/stylesheets/base.css');?>
+    <?=link_tag('data/stylesheets/skeleton.css');?>
+    <?=link_tag('data/stylesheets/layout.css');?>
+    <?=link_tag('data/stylesheets/site_style.css');?>
+
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+</head>
+<body>
+    <div class="container">
+        <div class="sixteen columns">
+			<h1 class="remove-bottom" style="margin-top: 40px">Football championship</h1>
+			<h5>Version 1.2</h5>
+			<hr />
+		</div>
+        <div class = "three columns sidebar">
+            <nav>
+                <ul>
+                    <li><?=anchor(site_url('team/view'), 'Список команд')?></li>
+                    <li><?=anchor(site_url('team/view'), 'Календарь матчей')?></li>
+                    <li><?=anchor(site_url('team/view'), 'Результаты матчей')?></li>
+                </ul>
+            </nav>
+        </div>
+        <div class = "thirteen columns">
+        
+	
