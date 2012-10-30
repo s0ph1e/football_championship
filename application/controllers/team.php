@@ -2,6 +2,25 @@
 
 class Team extends CI_Controller {
     
+    // Правила валидации для форм добавления и обновления
+    private $validation_rules = array(
+        array (
+            'field'   => 'team', 
+            'label'   => 'Команда', 
+            'rules'   => 'required'
+        ),
+        array (
+            'field'   => 'city', 
+            'label'   => 'Город', 
+            'rules'   => 'required'
+        ),
+        array (
+            'field'   => 'trainer', 
+            'label'   => 'Тренер', 
+            'rules'   => 'required'
+        )
+    );
+    
     public function __construct() 
     { 
         parent::__construct();
@@ -23,10 +42,8 @@ class Team extends CI_Controller {
     
     public function add()
     {
-        //Правила валидации
-        $this->form_validation->set_rules('team', 'Название команды', 'required');
-        $this->form_validation->set_rules('city', 'Город', 'required');
-        $this->form_validation->set_rules('trainer', 'Тренер', 'required');
+        // Указываем правила валидации для формы
+        $this->form_validation->set_rules($this->validation_rules);
         
         if ($this->form_validation->run() == FALSE)
 	{
@@ -45,7 +62,7 @@ class Team extends CI_Controller {
             $trainer = $this->input->post('trainer');
             $this->team_model->add_team($team, $city, $trainer);
             
-            $this->view();
+            redirect(site_url('/team'));
 	}
     }
     
@@ -54,6 +71,35 @@ class Team extends CI_Controller {
         $this->team_model->delete_team($id);
         
         redirect(site_url('/team'));
+    }
+    
+    public function update($id)
+    {
+        //Указываем правила валидации
+        $this->form_validation->set_rules($this->validation_rules);
+        
+        $team = $this->team_model->get_team($id);
+        
+        if ($this->form_validation->run() == FALSE)
+	{
+            
+            $data['team'] =  $this->form_validation->set_value('team',  $team->team);
+            $data['city'] =  $this->form_validation->set_value('city', $team->city);
+            $data['trainer'] =  $this->form_validation->set_value('trainer', $team->trainer);
+            
+            $this->load->view('header');
+            $this->load->view('team_update_form', $data);
+            $this->load->view('footer');
+	}
+	else
+	{
+            $team = $this->input->post('team');
+            $city = $this->input->post('city');
+            $trainer = $this->input->post('trainer');
+            $this->team_model->update_team($id, $team, $city, $trainer);
+            
+            redirect(site_url('/team'));
+	}
     }
 
 }
