@@ -14,6 +14,23 @@ class Team_model extends CI_Model {
         return $query->result();
     }
     
+    // Получение id всех команд
+    function get_all_team_id()
+    {
+        $this->db->select('id');
+        $query = $this->db->get('teams');
+        foreach ($query->result() as $row)
+        {
+            $result[] = $row->id;
+        }
+        return $result;
+    }
+    
+    function teams_count()
+    {
+        return $this->db->count_all('teams');
+    }
+    
     // Добавление новой команды
     function add_team($team, $city, $trainer)
     {
