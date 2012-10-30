@@ -5,23 +5,31 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
 
-	<!-- Basic Page Needs
-  ================================================== -->
-	<meta charset="utf-8">
-	<title>Football championship</title>
-	<meta name="description" content="">
-	<meta name="author" content="">
+<!-- Basic Page Needs
+================================================== -->
+<meta charset="utf-8">
+<title>Football championship</title>
+<meta name="description" content="">
+<meta name="author" content="">
 
-	<!-- CSS
-  ================================================== -->
-    <?=link_tag('data/stylesheets/base.css');?>
-    <?=link_tag('data/stylesheets/skeleton.css');?>
-    <?=link_tag('data/stylesheets/layout.css');?>
-    <?=link_tag('data/stylesheets/site_style.css');?>
+<!-- JS
+================================================== -->
+<script type="text/javascript" src=<?=base_url('data/js/jquery-1.8.2.min.js');?>></script>
+<script type="text/javascript" src=<?=base_url('data/js/team_actions.js');?>></script>
+<script type="text/javascript" >
+    var site_url = '<?=site_url()?>';
+    var base_url = '<?=base_url()?>';
+</script>
+<!-- CSS
+================================================== -->
+<?=link_tag('data/stylesheets/base.css');?>
+<?=link_tag('data/stylesheets/skeleton.css');?>
+<?=link_tag('data/stylesheets/layout.css');?>
+<?=link_tag('data/stylesheets/site_style.css');?>
 
-	<!--[if lt IE 9]>
-		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
 
 </head>
 <body>
