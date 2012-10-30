@@ -42,8 +42,8 @@
         <div class = "three columns sidebar">
             <nav>
                 <ul>
-                    <li><?=anchor(site_url('team/view'), 'Список команд')?></li>
-                    <li><?=anchor(site_url('team/view'), 'Календарь матчей')?></li>
+                    <li><?=anchor(site_url('team'), 'Список команд')?></li>
+                    <li><?=anchor(site_url('championship'), 'Календарь матчей')?></li>
                     <li><?=anchor(site_url('team/view'), 'Результаты матчей')?></li>
                 </ul>
             </nav>
