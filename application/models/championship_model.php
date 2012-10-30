@@ -29,7 +29,15 @@ class Championship_model extends CI_Model {
     
     function add_match($tour_id, $team1, $team2, $day)
     {
-        $this->db->insert('matches', array('tour_id' => $tour_id, 'team1_id' => $team1, 'team2_id' => $team2, 'tour_day' => $day));
+        $this->db->insert('matches', array('tour_id' => $tour_id, 'team1_id' => $team1, 'team2_id' => $team2, 'day_offset' => $day));
+    }
+    
+    function get_matches($tour_id)
+    {
+        $this->db->where(array('tour_id' => $tour_id));
+        $this->db->order_by('day_offset', 'asc'); 
+        $query = $this->db->get('matches');
+        return $query->result();
     }
     
     

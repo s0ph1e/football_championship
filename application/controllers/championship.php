@@ -46,18 +46,44 @@ class Championship extends CI_Controller {
                 $team2 = $teams[$rand];         // Вторая команда
                 array_splice($teams, $rand, 1);    // Удаляем id второй команды из массива
                 
-                $day_after_start = $i++ % 2;  // День, когда будет данный матч (0 - сб, 1 - вс)
-                $this->championship_model->add_match($tour_id, $team1, $team2, $day_after_start);       
+                $day_offset = $i++ % 2;  // День, когда будет данный матч (0 - сб, 1 - вс)
+                $this->championship_model->add_match($tour_id, $team1, $team2, $day_offset);       
             }
             
             // Переход к следующей неделе
-            $start_date->modify('+7 day');
+            $start_date->modify('+1 week');
         }
     }
     
     public function view_calendar()
     {
-        $data['tours'] = $this->championship_model->get_all_tours();
+        $tours = $this->championship_model->get_all_tours();
+        
+        foreach($tours as $tour)
+        {
+            $matches = $this->championship_model->get_matches($tour->id);
+            foreach ($matches as $match)
+            {
+                // Дата проведения матча (дата начала тура + отступ перед матчем)
+                $date = new DateTime($tour->start_date);
+                $date->modify('+'.$match->day_offset.' day');
+                $match_info['date'] = $date->format('d-m-Y');
+                
+                // Команды
+                $match_info['team1'] = $this->team_model->get_team($match->team1_id)->team;
+                $match_info['team2'] = $this->team_model->get_team($match->team2_id)->team;
+                
+                // Счет
+                $match_info['goals1'] = !empty($match->goals1)?$match->goals1:'';
+                $match_info['goals2'] = !empty($match->goals2)?$match->goals2:'';
+                
+                // В массив всех матчей тура добавляем данный матч
+                $matches_in_tour[] = $match_info;
+            }
+            
+            $data['tours'][$tour->id] = $matches_in_tour;
+            unset($matches_in_tour);
+        }
         
         $this->load->view('header');
         $this->load->view('calendar', $data);
