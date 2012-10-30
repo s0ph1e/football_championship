@@ -15,13 +15,13 @@ class Championship extends CI_Controller {
     // Функция, которая генерирует календарь матчей на год вперед
     public function create_calendar()
     {
-        $this->championship_model->clear_tours();
+        $this->championship_model->clear_calendar();
         
         $start_date = new DateTime();   // Текущая дата, с которой начинается чемпионат
         $end_date = new DateTime();     // Дата окончания чемпионата
         $end_date->modify('+1 year');
         
-        // Поиск ближайшей субботы
+        // Поиск ближайшей субботы.
         while ($start_date->format("w") != 6)
         {
             $start_date->modify('+1 day');
@@ -32,19 +32,22 @@ class Championship extends CI_Controller {
         {
             // Добавление тура в БД
             $tour_id = $this->championship_model->add_tour($start_date->format('Y-m-d'));
-            // Получение массива id всех команд
+            // Получение массива с id всех команд
             $teams = $this->team_model->get_all_team_id();
-            // Количество команд
-            $teams_count = $this->team_model->teams_count();
             
+            
+            $i = 0; // Для определения, в какой день (1 или 2) будет играть команда
             while (!empty($teams))
             {
                 $rand = rand(0, count($teams)-1);
                 $team1 = $teams[$rand];         // Первая команда
-                array_splice($teams, $rand, 1);    // Удаляем id 1 команды из массива
+                array_splice($teams, $rand, 1);    // Удаляем id первой команды из массива
                 $rand = rand(0, count($teams)-1);
                 $team2 = $teams[$rand];         // Вторая команда
-                array_splice($teams, $rand, 1);    // Удаляем id 2 команды из массива
+                array_splice($teams, $rand, 1);    // Удаляем id второй команды из массива
+                
+                $day_after_start = $i++ % 2;  // День, когда будет данный матч (0 - сб, 1 - вс)
+                $this->championship_model->add_match($tour_id, $team1, $team2, $day_after_start);       
             }
             
             // Переход к следующей неделе
