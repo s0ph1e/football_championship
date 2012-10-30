@@ -64,6 +64,8 @@ class Championship extends CI_Controller {
             $matches = $this->championship_model->get_matches($tour->id);
             foreach ($matches as $match)
             {
+                $match_info['id'] = $match->id;
+                
                 // Дата проведения матча (дата начала тура + отступ перед матчем)
                 $date = new DateTime($tour->start_date);
                 $date->modify('+'.$match->day_offset.' day');
@@ -74,8 +76,8 @@ class Championship extends CI_Controller {
                 $match_info['team2'] = $this->team_model->get_team($match->team2_id)->team;
                 
                 // Счет
-                $match_info['goals1'] = !empty($match->goals1)?$match->goals1:'';
-                $match_info['goals2'] = !empty($match->goals2)?$match->goals2:'';
+                $match_info['goals1'] = !empty($match->goals1)?$match->goals1:'?';
+                $match_info['goals2'] = !empty($match->goals2)?$match->goals2:'?';
                 
                 // В массив всех матчей тура добавляем данный матч
                 $matches_in_tour[] = $match_info;

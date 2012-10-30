@@ -1,4 +1,5 @@
 <?php
+    echo 'Вы можете добавить команду '.anchor(site_url('team/add'), img('data/images/add.png'), array('title'=>"Добавить"));
     if ($teams)
     {
         $tmpl = array ( 'table_open'  => '<table class = "teams_table">',
@@ -25,4 +26,4 @@
         $this->table->clear();
     }
     else {echo 'Нет команд.';}
-    echo 'Вы можете добавить команду '.anchor(site_url('team/add'), img('data/images/add.png'), array('title'=>"Добавить"));
+    
