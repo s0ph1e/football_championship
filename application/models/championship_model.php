@@ -40,5 +40,10 @@ class Championship_model extends CI_Model {
         return $query->result();
     }
     
+    function delete_match_result($id)
+    {
+        $this->db->update('matches', array('team1_goals' => null, 'team2_goals' => null), array('id' => $id));
+    }
+    
     
 }

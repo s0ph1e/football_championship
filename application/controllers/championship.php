@@ -76,8 +76,8 @@ class Championship extends CI_Controller {
                 $match_info['team2'] = $this->team_model->get_team($match->team2_id)->team;
                 
                 // Счет
-                $match_info['goals1'] = !empty($match->goals1)?$match->goals1:'?';
-                $match_info['goals2'] = !empty($match->goals2)?$match->goals2:'?';
+                $match_info['goals1'] = $match->team1_goals ? $match->team1_goals : '?';
+                $match_info['goals2'] = $match->team2_goals ? $match->team2_goals : '?';
                 
                 // В массив всех матчей тура добавляем данный матч
                 $matches_in_tour[] = $match_info;
@@ -90,5 +90,11 @@ class Championship extends CI_Controller {
         $this->load->view('header');
         $this->load->view('calendar', $data);
         $this->load->view('footer');
+    }
+    
+    public function delete($id)
+    {
+        $this->championship_model->delete_match_result($id);
+        redirect(site_url('/championship'));
     }
 }

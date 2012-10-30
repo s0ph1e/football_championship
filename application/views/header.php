@@ -15,7 +15,7 @@
 <!-- JS
 ================================================== -->
 <script type="text/javascript" src=<?=base_url('data/js/jquery-1.8.2.min.js');?>></script>
-<script type="text/javascript" src=<?=base_url('data/js/team_actions.js');?>></script>
+<script type="text/javascript" src=<?=base_url('data/js/script.js');?>></script>
 <script type="text/javascript" >
     var site_url = '<?=site_url()?>';
     var base_url = '<?=base_url()?>';
