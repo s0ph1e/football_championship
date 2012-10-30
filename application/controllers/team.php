@@ -52,7 +52,7 @@ class Team extends CI_Controller {
             $data['trainer'] = $this->form_validation->set_value('trainer'); 
             
             $this->load->view('header');
-            $this->load->view('team_add_form', $data);
+            $this->load->view('team_add_upd_form', $data);
             $this->load->view('footer');
 	}
 	else
@@ -88,7 +88,7 @@ class Team extends CI_Controller {
             $data['trainer'] =  $this->form_validation->set_value('trainer', $team->trainer);
             
             $this->load->view('header');
-            $this->load->view('team_update_form', $data);
+            $this->load->view('team_add_upd_form', $data);
             $this->load->view('footer');
 	}
 	else
