@@ -1,4 +1,4 @@
-<center>
+<div class ="form-container">
 <?php 
 
     echo '<div class = "errors">'.validation_errors().'</div>'; 
@@ -27,3 +27,4 @@
 <?php echo form_submit('submit_upd', $button_text,'id="regbtn"');?>
 
 <?php echo form_close();?>
+</div>

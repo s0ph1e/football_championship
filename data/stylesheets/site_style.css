@@ -28,3 +28,13 @@ img {
 .errors {
     color: #ff0000;
 }
+.form-container {
+    text-align: center;
+}
+.form-container input{
+    margin: 5px auto;
+    
+}
+.form-block {
+    display: inline-block;
+}
