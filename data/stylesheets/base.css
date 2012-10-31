@@ -231,7 +231,8 @@
 		max-width: 100%;
 		display: block;
 		margin-bottom: 20px;
-		background: #fff; }
+		background: #fff; 
+                text-align: center;}
 	select {
 		padding: 0; }
 	input[type="text"]:focus,

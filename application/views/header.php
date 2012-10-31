@@ -39,7 +39,7 @@
 			<h5>Version 1.2</h5>
 			<hr />
 		</div>
-        <div class = "three columns sidebar">
+        <div class = "four columns sidebar">
             <nav>
                 <ul>
                     <li><?=anchor(site_url('team'), 'Список команд')?></li>
@@ -48,6 +48,6 @@
                 </ul>
             </nav>
         </div>
-        <div class = "thirteen columns">
+        <div class = "twelve columns">
         
 	

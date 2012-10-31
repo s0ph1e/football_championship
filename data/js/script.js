@@ -24,8 +24,7 @@ $(document).ready(function() {
         }).done(function() { 
             $('#del_' + id).parent().parent().find('td:eq(2)').html('? : ?');
 
-        });
-        
+        });       
     return false;
     });
 

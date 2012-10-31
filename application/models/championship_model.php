@@ -32,7 +32,7 @@ class Championship_model extends CI_Model {
         $this->db->insert('matches', array('tour_id' => $tour_id, 'team1_id' => $team1, 'team2_id' => $team2, 'day_offset' => $day));
     }
     
-    function get_matches($tour_id)
+    function get_matches_in_tour($tour_id)
     {
         $this->db->where(array('tour_id' => $tour_id));
         $this->db->order_by('day_offset', 'asc'); 
@@ -45,5 +45,18 @@ class Championship_model extends CI_Model {
         $this->db->update('matches', array('team1_goals' => null, 'team2_goals' => null), array('id' => $id));
     }
     
+    function get_match($id)
+    {
+        $this->db->where(array('id' => $id));
+        $query = $this->db->get('matches');
+        return $query->row();
+    }
     
+    function update_match_result($id, $team1_goals, $team2_goals)
+    {
+        // Чтоб бд не преобразовывала null в 0
+        $data = array(  'team1_goals' => $team1_goals === '' ? null : $team1_goals,
+                        'team2_goals' => $team2_goals === '' ? null : $team2_goals);
+        $this->db->update('matches', $data, array('id' => $id));
+    }
 }

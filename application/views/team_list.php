@@ -16,7 +16,7 @@
             $actions = anchor(   site_url('team/update/'.$team->id), 
                                             img('data/images/edit.png'), 
                                             array('class' => "upd_team", 'title'=>"Изменить", 'id' => "upd_".$team->id) );
-            $actions .='&nbsp'.anchor(  site_url('team/delete/'.$team->id), 
+            $actions .='&nbsp;'.anchor(  site_url('team/delete/'.$team->id), 
                                         img('data/images/delete.png'), 
                                         array('class' => "del_team", 'title'=>"Удалить", 'id' => "del_".$team->id) );
             $this->table->add_row($team->id, $team->team, $team->city, $team->trainer, $actions);
