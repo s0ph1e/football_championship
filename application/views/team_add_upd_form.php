@@ -1,7 +1,7 @@
 <center>
 <?php 
 
-    echo validation_errors();
+    echo '<div class = "errors">'.validation_errors().'</div>'; 
     
     // Разные actions формы и надписи кнопок, в зависимости от того, из какой функции они вызваны
 

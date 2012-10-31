@@ -1,7 +1,7 @@
 <center>
 <p>Введите счет для матча</p>
 <?php 
-    echo validation_errors(); 
+    echo '<div class = "errors">'.validation_errors().'</div>'; 
 
     echo form_open('championship/update/'.$this->uri->segment(3));
 ?>

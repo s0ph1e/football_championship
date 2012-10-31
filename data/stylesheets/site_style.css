@@ -25,3 +25,6 @@
 img {
     vertical-align: middle;
 }
+.errors {
+    color: #ff0000;
+}

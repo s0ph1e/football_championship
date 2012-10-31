@@ -36,7 +36,7 @@
     <div class="container">
         <div class="sixteen columns">
 			<h1 class="remove-bottom" style="margin-top: 40px">Football championship</h1>
-			<h5>Version 1.2</h5>
+			<h5>Version 1.0</h5>
 			<hr />
 		</div>
         <div class = "four columns sidebar">

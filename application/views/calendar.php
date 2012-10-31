@@ -1,8 +1,14 @@
 <?php
 
-echo 'Вы можете сгенерировать новый календарь матчей '.anchor(site_url('championship/create_calendar'), img('data/images/magic.png'));
+echo '<p>Вы можете сгенерировать новый календарь матчей '.anchor(site_url('championship/create_calendar'), img('data/images/magic.png')).'</p>';
 
-if($tours)
+if(isset($error))
+{
+    echo '<div class = "errors">'.$error.'</div>';
+    echo '<p>Вы можете добавить или удалить команду в '.anchor(site_url('team'), 'списке команд').' или просмотреть '.anchor(site_url('championship'), 'текущий календарь').'.</p>';
+}
+
+if(isset($tours))
 {
     foreach ($tours as $key => $value)
     {
@@ -15,7 +21,7 @@ if($tours)
         $this->table->set_template($tmpl);
         $this->table->set_heading(array('Дата', 'Игрок', 'Счет', 'Игрок', 'Действия'));
         
-        if ($value)
+        if (isset($value))
         {
             foreach ($value as $match)
             {
@@ -34,4 +40,4 @@ if($tours)
         else echo 'Матчей нет!';
     }
 }
-else echo 'Календарь матчей не был составлен.';
+else echo '<p>Календарь чемпионата не был составлен.</p>';

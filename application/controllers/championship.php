@@ -15,11 +15,23 @@ class Championship extends CI_Controller {
     // Функция, которая генерирует календарь матчей на год вперед
     public function create_calendar()
     {
+        if($this->team_model->teams_count() % 2 == 1)
+        {
+            $this->load->view('header');
+            $this->load->view('calendar', array('error' => 'Нельзя создать календарь с нечетным количеством команд!'));
+            $this->load->view('footer');
+            return;
+        }
+        
+        // truncate таблиц прошлого календаря
         $this->championship_model->clear_calendar();
         
         $start_date = new DateTime();   // Текущая дата, с которой начинается чемпионат
         $end_date = new DateTime();     // Дата окончания чемпионата
         $end_date->modify('+1 year');
+        
+        // Идентификаторы всех команд, которые будут участвовать в чемпионате
+        $teams = $this->team_model->get_all_team_id();
         
         // Поиск ближайшей субботы.
         while ($start_date->format("w") != 6)
@@ -32,21 +44,19 @@ class Championship extends CI_Controller {
         {
             // Добавление тура в БД
             $tour_id = $this->championship_model->add_tour($start_date->format('Y-m-d'));
-            // Получение массива с id всех команд
-            $teams = $this->team_model->get_all_team_id();
             
-            
-            $i = 0; // Для определения, в какой день (1 или 2) будет играть команда
-            while (!empty($teams))
+            $i = 0; // Переменная для определения, в какой день (1 или 2) будет играть команда
+            $tmp_teams = $teams;        // Массив идентификаторов команд
+            while (!empty($tmp_teams))  // Пока массив не пустой
             {
-                $rand = rand(0, count($teams)-1);
-                $team1 = $teams[$rand];         // Первая команда
-                array_splice($teams, $rand, 1);    // Удаляем id первой команды из массива
-                $rand = rand(0, count($teams)-1);
-                $team2 = $teams[$rand];         // Вторая команда
-                array_splice($teams, $rand, 1);    // Удаляем id второй команды из массива
+                $rand = rand(0, count($tmp_teams)-1);   // Рандомно выбираем элемент массива
+                $team1 = $tmp_teams[$rand];         // Первая команда - значение этого элемента
+                array_splice($tmp_teams, $rand, 1);    // Удаляем элемент из массива
+                $rand = rand(0, count($tmp_teams)-1); // Рандомно выбираем элемент для второй команды
+                $team2 = $tmp_teams[$rand];         // Вторая команда
+                array_splice($tmp_teams, $rand, 1);   // Удаляем id второй команды из массива
                 
-                $day_offset = $i++ % 2;  // День, когда будет данный матч (0 - сб, 1 - вс)
+                $day_offset = $i++ % 2;  // Кол-во дней от старта перед матчем (т.е. 0 - сб, 1 - вс)
                 $this->championship_model->add_match($tour_id, $team1, $team2, $day_offset);       
             }
             
@@ -54,16 +64,23 @@ class Championship extends CI_Controller {
             $start_date->modify('+1 week');
         }
         
-        redirect(site_url('/championship'));
+        redirect(site_url('championship'));
     }
     
     public function view_calendar()
     {
+        // Массив для передачи в представление
+        $data = array();
+        
+        // Получаем все туры
         $tours = $this->championship_model->get_all_tours();
         
-        foreach($tours as $tour)
+        // Для каждого тура получаем все матчи
+        foreach($tours as $tour)    
         {
             $matches = $this->championship_model->get_matches_in_tour($tour->id);
+            
+            // Для каждого матча получаем информацию
             foreach ($matches as $match)
             {
                 $match_info['id'] = $match->id;
@@ -75,11 +92,13 @@ class Championship extends CI_Controller {
                 
                 // Команды
                 $team1 = $this->team_model->get_team($match->team1_id);
-                $match_info['team1'] = $team1->team.' ('.$team1->city.')';
                 $team2 = $this->team_model->get_team($match->team2_id);
+                
+                // Названия команд
+                $match_info['team1'] = $team1->team.' ('.$team1->city.')';
                 $match_info['team2'] = $team2->team.' ('.$team2->city.')';
                 
-                // Счет
+                // Очки команд
                 $match_info['goals1'] = $match->team1_goals === null ? '?' : $match->team1_goals;
                 $match_info['goals2'] = $match->team2_goals === null ? '?' : $match->team2_goals;
                 
@@ -142,19 +161,20 @@ class Championship extends CI_Controller {
 	}
     }
     
-    // Функция, проверяющая заполненность полей резуьлтата матча
-    public function match_result_check($str)
+    // Функция, проверяющая заполненность полей результата матча
+    public function match_result_check()
     {
         $team1_goals = $this->input->post('team1_goals');
         $team2_goals = $this->input->post('team2_goals');
         
-        if(isset($team1_goals) === isset($team2_goals))
+        // если оба поля одновременно пусты или заполнены, то все ок
+        if(isset($team1_goals) == isset($team2_goals))
         {
             return true;
         }
-        else 
+        else    // иначе добавляем сообщение об ошибке
         {
-            $this->form_validation->set_message('match_result_check', 'Both fields must be set or unset');
+            $this->form_validation->set_message('match_result_check', 'Оба поля должны быть пусты или заполнены одновременно.');
             return false;
         }
     }

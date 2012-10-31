@@ -1,7 +1,8 @@
 <?php
     echo 'Вы можете добавить команду '.anchor(site_url('team/add'), img('data/images/add.png'), array('title'=>"Добавить"));
-    if ($teams)
+    if (isset($teams))
     {
+        // Шаблон для таблицы
         $tmpl = array ( 'table_open'  => '<table class = "teams_table">',
                         'heading_row_start'   => '<tr class = "teams_table_heading">',
                         'row_start'           => '<tr class = "teams_table_row">',
@@ -25,5 +26,9 @@
         echo $this->table->generate();
         $this->table->clear();
     }
-    else {echo 'Нет команд.';}
+    else 
+    {
+        echo 'Нет команд.';
+        
+    }
     
