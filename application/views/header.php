@@ -44,7 +44,7 @@
                 <ul>
                     <li><?=anchor(site_url('team'), 'Список команд')?></li>
                     <li><?=anchor(site_url('championship'), 'Календарь матчей')?></li>
-                    <li><?=anchor(site_url('team/view'), 'Результаты матчей')?></li>
+                    <li><?=anchor(site_url('championship/league_table'), 'Результаты матчей')?></li>
                 </ul>
             </nav>
         </div>

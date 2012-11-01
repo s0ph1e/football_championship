@@ -161,6 +161,91 @@ class Championship extends CI_Controller {
 	}
     }
     
+    // Турнирная таблица
+    public function league_table()
+    {
+        // Получаем все команды
+        $teams = $this->team_model->get_all();
+        
+        // массив для передачи во вьюшку
+        $data = array();
+        
+        // Для каждой команды получаем количество игр, голов, выиграшей и т.п.
+        foreach ($teams as $team)
+        { 
+            // Название команды
+            $team_info['team'] = $team->team;
+            
+            // Массив матчей, в которых принимала участие команда
+            $matches = $this->championship_model->get_team_games($team->id);
+           
+            // Количество игр
+            $team_info['games'] = count($matches);
+            
+            $win = 0;   // Победы
+            $defeat = 0;    // Поражения
+            $dead_heat = 0; // Ничьи
+            $scored_goals = 0; // Забитые голы
+            $missed_goals = 0; // Пропущенные голы
+            
+            
+            // Для каждого матча команды определяем выиграла она или проиграла, сколько голов забила и пропустила etc
+            foreach ($matches as $match)
+            {
+                // Если указанная команда team1, то команда team2 - противник
+                if($match->team1_id == $team->id)
+                {
+                    $team_goals = 'team1_goals';
+                    $enemy_goals = 'team2_goals';
+                }
+                else // Если указанная команда team2, то противник team1
+                {
+                    $team_goals = 'team2_goals';
+                    $enemy_goals = 'team1_goals';
+                }
+                
+                // Определяем количество забитых и пропущенных голов
+                $scored_goals += $match->$team_goals;
+                $missed_goals += $match->$enemy_goals;
+
+                // Определяем выиграш, проиграш или ничью
+                if ($match->$team_goals > $match->$enemy_goals)
+                {
+                    $win ++;
+                }
+                elseif ($match->$team_goals == $match->$enemy_goals)
+                {
+                    $dead_heat ++;
+                }
+                elseif ($match->$team_goals > $match->$enemy_goals)
+                {
+                    $defeat ++;
+                }
+            }
+            // Запись в массив команды
+            $team_info['win'] = $win;
+            $team_info['defeat'] = $defeat;
+            $team_info['dead_heat'] = $dead_heat;
+            $team_info['scored_goals'] = $scored_goals;
+            $team_info['missed_goals'] = $missed_goals;    
+            
+            $data['table'][] = $team_info;
+        }
+        usort($data['table'], array("Championship", "cmp"));
+        $this->load->view('header');
+        $this->load->view('league_table', $data);
+        $this->load->view('footer');
+    }
+    
+    // Функция для сортировке команд по выигранным играм
+    public static function cmp($a, $b)
+    {
+        if ($a['win'] == $b['win']) {
+            return 0;
+        }
+        return ($a['win'] < $b['win']) ? 1 : -1;
+    }
+    
     // Функция, проверяющая заполненность полей результата матча
     public function match_result_check()
     {
@@ -168,7 +253,8 @@ class Championship extends CI_Controller {
         $team2_goals = $this->input->post('team2_goals');
         
         // если оба поля одновременно пусты или заполнены, то все ок
-        if(isset($team1_goals) == isset($team2_goals))
+        if((strlen($team1_goals) == 0 && strlen($team2_goals) == 0) || 
+           (strlen($team1_goals) > 0 && strlen($team2_goals) > 0 ))
         {
             return true;
         }

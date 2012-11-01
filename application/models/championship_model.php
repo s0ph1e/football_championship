@@ -59,4 +59,16 @@ class Championship_model extends CI_Model {
                         'team2_goals' => $team2_goals === '' ? null : $team2_goals);
         $this->db->update('matches', $data, array('id' => $id));
     }
+    
+    // Получить все матчи, в которых участвовала команда
+    function get_team_games($team_id)
+    {
+        // Получаем все матчи, где указанная команда были team1 или team2
+        // где указан счет
+        $query = "SELECT * FROM  `matches` WHERE  
+                    `team1_goals` IS NOT NULL AND  `team2_goals` IS NOT NULL AND 
+                    (`team1_id` = $team_id OR  `team2_id` = $team_id)";
+        
+        return $this->db->query($query)->result();
+    }
 }
