@@ -41,6 +41,7 @@ class Championship extends CI_Controller {
             $start_date->modify('+ '.$add_days.' day');
         }
         
+        // Время в секундах окончания чемпионата
         $end_date_in_seconds = $end_date->format('U');
         
         // Создание всех туров на год вперед
@@ -85,6 +86,7 @@ class Championship extends CI_Controller {
         {
             // Определяем, нужна ли фильтрация по команде
             $search = $this->input->post('search_team');
+            
             if ($search)
             {
                 $matches = $this->championship_model->get_matches_in_tour_by_team($tour->id, $search);
@@ -93,7 +95,11 @@ class Championship extends CI_Controller {
             {
                 $matches = $this->championship_model->get_matches_in_tour($tour->id);
             }
-             
+            
+            // Пропускаем тур, если нет матчей
+            if (!$matches)
+                continue;
+            
             // Для каждого матча получаем информацию
             foreach ($matches as $match)
             {
@@ -120,8 +126,11 @@ class Championship extends CI_Controller {
                 $matches_in_tour[] = $match_info;
             }
             
-            $data['tours'][$tour->id] = $matches_in_tour;
-            unset($matches_in_tour);
+            if (isset($matches_in_tour))
+            {
+                $data['tours'][$tour->id] = $matches_in_tour;
+                unset($matches_in_tour);
+            }
         }
         
         $this->load->view('header');

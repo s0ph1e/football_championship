@@ -4,7 +4,15 @@ echo '<p>Вы можете сгенерировать новый календа�
 
 // Форма для фильтра
 echo form_open('championship/view_calendar');
-echo form_input(array('name' => 'search_team'));
+echo form_input(array('name' => 'search_team', 'style' => 'display:inline-block'));
+$btn_search = array(
+                    'type'      => 'image',
+                    'src'        => base_url().'data/images/filter.png',
+                    'name'        => 'submit_search',
+                    'width'     => '32',
+                    'height'    => '32'
+                );
+echo form_submit($btn_search);
 echo form_close();
 
 // Вывод ошибок, если они есть

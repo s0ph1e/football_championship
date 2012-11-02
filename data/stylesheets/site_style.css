@@ -26,7 +26,7 @@ img {
     vertical-align: middle;
 }
 .errors {
-    color: #ff0000;
+    color: #f00;
 }
 .form-container {
     text-align: center;
@@ -37,4 +37,10 @@ img {
 }
 .form-block {
     display: inline-block;
+}
+input[type="image"] {
+                display: inline;
+		outline: none;
+		margin: 0 5px;
+		vertical-align: middle;
 }

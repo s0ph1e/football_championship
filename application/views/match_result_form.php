@@ -16,7 +16,7 @@
     <?= form_input(array('name' => 'team2_goals', 'value' => $team2_goals)); ?>
 </div>
 
-<p><?php echo form_submit('submit_upd', 'Обновить','id="regbtn"');?></p>
+<p><?php echo form_submit('submit_upd', 'Обновить');?></p>
 
 <?php echo form_close();?>
 </div>

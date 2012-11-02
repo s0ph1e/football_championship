@@ -46,10 +46,23 @@ class Championship_model extends CI_Model {
         $this->db->like('team', $team);
         $teams = $this->db->get('teams')->result();
         
-        $this->db->where(array('tour_id' => $tour_id));
-        $this->db->order_by('day_offset', 'asc'); 
-        $query = $this->db->get('matches');
-        return $query->result();
+        if(count($teams))
+        {
+            foreach ($teams as $team)
+            {
+                $teams_id[] = $team->id;
+            }
+            $team_id_str = implode($teams_id, ',');
+
+            $query = "SELECT * FROM  `matches` WHERE 
+                        `tour_id` = $tour_id AND
+                        (`team1_id` IN ($team_id_str)
+                        OR `team2_id` IN ($team_id_str))";
+
+            return $this->db->query($query)->result();
+        }
+        else return false;
+        
     }
     
     function delete_match_result($id)
