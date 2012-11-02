@@ -1,13 +1,20 @@
 <?php
-
+// Ссылка на скрипт генерации календаря
 echo '<p>Вы можете сгенерировать новый календарь матчей '.anchor(site_url('championship/create_calendar'), img('data/images/magic.png')).'</p>';
 
+// Форма для фильтра
+echo form_open('championship/view_calendar');
+echo form_input(array('name' => 'search_team'));
+echo form_close();
+
+// Вывод ошибок, если они есть
 if(isset($error))
 {
     echo '<div class = "errors">'.$error.'</div>';
     echo '<p>Вы можете добавить или удалить команду в '.anchor(site_url('team'), 'списке команд').' или просмотреть '.anchor(site_url('championship'), 'текущий календарь').'.</p>';
 }
 
+// Календарь
 if(isset($tours))
 {
     foreach ($tours as $key => $value)

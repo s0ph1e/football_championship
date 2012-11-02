@@ -40,6 +40,18 @@ class Championship_model extends CI_Model {
         return $query->result();
     }
     
+    function get_matches_in_tour_by_team($tour_id, $team)
+    {
+        // Получаем id команд по названию
+        $this->db->like('team', $team);
+        $teams = $this->db->get('teams')->result();
+        
+        $this->db->where(array('tour_id' => $tour_id));
+        $this->db->order_by('day_offset', 'asc'); 
+        $query = $this->db->get('matches');
+        return $query->result();
+    }
+    
     function delete_match_result($id)
     {
         $this->db->update('matches', array('team1_goals' => null, 'team2_goals' => null), array('id' => $id));
@@ -61,7 +73,7 @@ class Championship_model extends CI_Model {
     }
     
     // Получить все матчи, в которых участвовала команда
-    function get_team_games($team_id)
+    function get_team_matches($team_id)
     {
         // Получаем все матчи, где указанная команда были team1 или team2
         // где указан счет

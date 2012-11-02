@@ -34,13 +34,17 @@ class Championship extends CI_Controller {
         $teams = $this->team_model->get_all_team_id();
         
         // Поиск ближайшей субботы.
-        while ($start_date->format("w") != 6)
+        $day_of_week = $start_date->format("w");    // Текущий день неделе
+        if ($day_of_week != 6)
         {
-            $start_date->modify('+1 day');
+            $add_days = 6 - $day_of_week;   // Дней до субботы
+            $start_date->modify('+ '.$add_days.' day');
         }
         
+        $end_date_in_seconds = $end_date->format('U');
+        
         // Создание всех туров на год вперед
-        while ($start_date->format('U') < $end_date->format('U'))
+        while ($start_date->format('U') < $end_date_in_seconds)
         {
             // Добавление тура в БД
             $tour_id = $this->championship_model->add_tour($start_date->format('Y-m-d'));
@@ -48,13 +52,14 @@ class Championship extends CI_Controller {
             $i = 0; // Переменная для определения, в какой день (1 или 2) будет играть команда
             $tmp_teams = $teams;        // Массив идентификаторов команд
             while (!empty($tmp_teams))  // Пока массив не пустой
-            {
-                $rand = rand(0, count($tmp_teams)-1);   // Рандомно выбираем элемент массива
+            { 
+                $rand = array_rand($tmp_teams);     // Рандомно выбираем элемент массива
                 $team1 = $tmp_teams[$rand];         // Первая команда - значение этого элемента
-                array_splice($tmp_teams, $rand, 1);    // Удаляем элемент из массива
-                $rand = rand(0, count($tmp_teams)-1); // Рандомно выбираем элемент для второй команды
-                $team2 = $tmp_teams[$rand];         // Вторая команда
-                array_splice($tmp_teams, $rand, 1);   // Удаляем id второй команды из массива
+                unset($tmp_teams[$rand]);       // Удаляем элемент из массива
+                // По аналогии со второй командой
+                $rand = array_rand($tmp_teams);
+                $team2 = $tmp_teams[$rand];         
+                unset($tmp_teams[$rand]);
                 
                 $day_offset = $i++ % 2;  // Кол-во дней от старта перед матчем (т.е. 0 - сб, 1 - вс)
                 $this->championship_model->add_match($tour_id, $team1, $team2, $day_offset);       
@@ -78,8 +83,17 @@ class Championship extends CI_Controller {
         // Для каждого тура получаем все матчи
         foreach($tours as $tour)    
         {
-            $matches = $this->championship_model->get_matches_in_tour($tour->id);
-            
+            // Определяем, нужна ли фильтрация по команде
+            $search = $this->input->post('search_team');
+            if ($search)
+            {
+                $matches = $this->championship_model->get_matches_in_tour_by_team($tour->id, $search);
+            }
+            else 
+            {
+                $matches = $this->championship_model->get_matches_in_tour($tour->id);
+            }
+             
             // Для каждого матча получаем информацию
             foreach ($matches as $match)
             {
@@ -174,10 +188,10 @@ class Championship extends CI_Controller {
         foreach ($teams as $team)
         { 
             // Название команды
-            $team_info['team'] = $team->team;
+            $team_info['team'] = $team->team.' ('.$team->city.')';
             
             // Массив матчей, в которых принимала участие команда
-            $matches = $this->championship_model->get_team_games($team->id);
+            $matches = $this->championship_model->get_team_matches($team->id);
            
             // Количество игр
             $team_info['games'] = count($matches);
@@ -217,7 +231,7 @@ class Championship extends CI_Controller {
                 {
                     $dead_heat ++;
                 }
-                elseif ($match->$team_goals > $match->$enemy_goals)
+                elseif ($match->$team_goals < $match->$enemy_goals)
                 {
                     $defeat ++;
                 }
@@ -227,23 +241,16 @@ class Championship extends CI_Controller {
             $team_info['defeat'] = $defeat;
             $team_info['dead_heat'] = $dead_heat;
             $team_info['scored_goals'] = $scored_goals;
-            $team_info['missed_goals'] = $missed_goals;    
+            $team_info['missed_goals'] = $missed_goals; 
+            $team_info['score'] = 3*$win + 1*$dead_heat;
             
             $data['table'][] = $team_info;
         }
+        // Сортировка команд по очкам
         usort($data['table'], array("Championship", "cmp"));
         $this->load->view('header');
         $this->load->view('league_table', $data);
         $this->load->view('footer');
-    }
-    
-    // Функция для сортировке команд по выигранным играм
-    public static function cmp($a, $b)
-    {
-        if ($a['win'] == $b['win']) {
-            return 0;
-        }
-        return ($a['win'] < $b['win']) ? 1 : -1;
     }
     
     // Функция, проверяющая заполненность полей результата матча
@@ -263,5 +270,14 @@ class Championship extends CI_Controller {
             $this->form_validation->set_message('match_result_check', 'Оба поля должны быть пусты или заполнены одновременно.');
             return false;
         }
+    }
+    
+    // Функция для сортировке команд по очкам
+    public static function cmp($a, $b)
+    {
+        if ($a['score'] == $b['score']) {
+            return 0;
+        }
+        return ($a['score'] < $b['score']) ? 1 : -1;
     }
 }
