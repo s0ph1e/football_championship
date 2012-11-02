@@ -1,3 +1,4 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');?>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
 <!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
@@ -44,7 +45,7 @@
                 <ul>
                     <li><?=anchor(site_url('team'), 'Список команд')?></li>
                     <li><?=anchor(site_url('championship'), 'Календарь матчей')?></li>
-                    <li><?=anchor(site_url('championship/league_table'), 'Результаты матчей')?></li>
+                    <li><?=anchor(site_url('championship/league_table'), 'Турнирная таблица')?></li>
                 </ul>
             </nav>
         </div>

@@ -1,4 +1,4 @@
-<?php
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 // Ссылка на скрипт генерации календаря
 echo '<p>Вы можете сгенерировать новый календарь матчей '.anchor(site_url('championship/create_calendar'), img('data/images/magic.png')).'</p>';
 
@@ -29,11 +29,7 @@ if(isset($tours))
     {
         echo '<h4>'.$key.' тур </h4>';  // № тура
         
-        $tmpl = array ( 'table_open'  => '<table class = "teams_table">',
-                        'heading_row_start'   => '<tr class = "teams_table_heading">',
-                        'row_start'           => '<tr class = "teams_table_row">',
-                        'row_alt_start'   =>  '<tr class = "teams_table_row">');
-        $this->table->set_template($tmpl);
+        $this->table->set_template($this->config->item('table_template'));
         $this->table->set_heading(array('Дата', 'Игрок', 'Счет', 'Игрок', 'Действия'));
         
         if (isset($value))

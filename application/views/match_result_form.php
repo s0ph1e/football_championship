@@ -1,3 +1,5 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');?>
+
 <div class ="form-container">
 <p>Введите счет для матча</p>
 <?php 

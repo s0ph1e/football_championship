@@ -80,7 +80,7 @@ $autoload['helper'] = array('url', 'html', 'form');
 |
 */
 
-$autoload['config'] = array();
+$autoload['config'] = array('table_template');
 
 
 /*

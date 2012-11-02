@@ -1,13 +1,9 @@
-<?php
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 if(isset($table))
 {
     echo '<h4>Турнирная таблица</h4>';
-    $tmpl = array ( 'table_open'  => '<table class = "teams_table">',
-                        'heading_row_start'   => '<tr class = "teams_table_heading">',
-                        'row_start'           => '<tr class = "teams_table_row">',
-                        'row_alt_start'   =>  '<tr class = "teams_table_row">');
-    $this->table->set_template($tmpl);
+    $this->table->set_template($this->config->item('table_template'));
     $this->table->set_heading(array('Команда', 'И', 'В', 'Н', 'П', 'З - П', 'О'));
     
     foreach($table as $row)

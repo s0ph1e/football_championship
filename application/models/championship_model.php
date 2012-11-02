@@ -1,4 +1,4 @@
-<?php
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Championship_model extends CI_Model {
     
@@ -23,8 +23,8 @@ class Championship_model extends CI_Model {
     
     function get_all_tours()
     {
-        $query = $this->db->get('tours');
-        return $query->result();
+        return $this->db->get('tours')
+                        ->result();
     }
     
     function add_match($tour_id, $team1, $team2, $day)
@@ -34,17 +34,18 @@ class Championship_model extends CI_Model {
     
     function get_matches_in_tour($tour_id)
     {
-        $this->db->where(array('tour_id' => $tour_id));
-        $this->db->order_by('day_offset', 'asc'); 
-        $query = $this->db->get('matches');
-        return $query->result();
+        return $this->db->where(array('tour_id' => $tour_id))
+                        ->order_by('day_offset', 'asc') 
+                        ->get('matches')
+                        ->result();
     }
     
     function get_matches_in_tour_by_team($tour_id, $team)
     {
         // Получаем id команд по названию
-        $this->db->like('team', $team);
-        $teams = $this->db->get('teams')->result();
+        $teams = $this->db->like('team', $team)
+                          ->get('teams')
+                          ->result();
         
         if(count($teams))
         {
@@ -53,13 +54,10 @@ class Championship_model extends CI_Model {
                 $teams_id[] = $team->id;
             }
             $team_id_str = implode($teams_id, ',');
-
-            $query = "SELECT * FROM  `matches` WHERE 
-                        `tour_id` = $tour_id AND
-                        (`team1_id` IN ($team_id_str)
-                        OR `team2_id` IN ($team_id_str))";
-
-            return $this->db->query($query)->result();
+            return $this->db->where('tour_id', $tour_id)
+                            ->where("( team1_id IN ($team_id_str) OR team2_id IN ($team_id_str) )")
+                            ->get('matches')
+                            ->result();
         }
         else return false;
         
@@ -72,9 +70,9 @@ class Championship_model extends CI_Model {
     
     function get_match($id)
     {
-        $this->db->where(array('id' => $id));
-        $query = $this->db->get('matches');
-        return $query->row();
+        return $this->db->where(array('id' => $id))
+                        ->get('matches')
+                        ->row();
     }
     
     function update_match_result($id, $team1_goals, $team2_goals)
@@ -88,12 +86,12 @@ class Championship_model extends CI_Model {
     // Получить все матчи, в которых участвовала команда
     function get_team_matches($team_id)
     {
-        // Получаем все матчи, где указанная команда были team1 или team2
+        // Получаем все матчи, где указанная команда team1 или team2
         // где указан счет
-        $query = "SELECT * FROM  `matches` WHERE  
-                    `team1_goals` IS NOT NULL AND  `team2_goals` IS NOT NULL AND 
-                    (`team1_id` = $team_id OR  `team2_id` = $team_id)";
-        
-        return $this->db->query($query)->result();
+        return $this->db->where('team1_goals IS NOT NULL')
+                        ->where('team2_goals IS NOT NULL')
+                        ->where("(team1_id = $team_id OR team2_id = $team_id)")
+                        ->get('matches')
+                        ->result();
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Team_model extends CI_Model {
     
@@ -10,16 +10,17 @@ class Team_model extends CI_Model {
     // Получение списка всех комманд
     function get_all() 
     {
-        $query = $this->db->get('teams');
-        return $query->result();
+        return $this->db->get('teams')
+                        ->result();
     }
     
     // Получение id всех команд
     function get_all_team_id()
     {
-        $this->db->select('id');
-        $query = $this->db->get('teams');
-        foreach ($query->result() as $row)
+        $query = $this->db->select('id')
+                          ->get('teams')
+                          ->result();
+        foreach ($query as $row)
         {
             $result[] = $row->id;
         }
@@ -44,6 +45,8 @@ class Team_model extends CI_Model {
     function delete_team($id)
     {
         $this->db->delete('teams', array( 'id' => $id));
+        $this->db->delete('matches', array('team1_id' => $id));
+        $this->db->delete('matches', array('team2_id' => $id));
     }
     
     function update_team($id, $team, $city, $trainer)
@@ -56,7 +59,7 @@ class Team_model extends CI_Model {
     
     function get_team($id)
     {
-        $query = $this->db->get_where('teams', array('id' => $id));
-        return $query->row();
+        return $this->db->get_where('teams', array('id' => $id))
+                        ->row();
     }
 }

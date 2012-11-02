@@ -1,4 +1,5 @@
-<?php
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 class Championship extends CI_Controller {
     
     public function __construct() 
@@ -15,6 +16,7 @@ class Championship extends CI_Controller {
     // Функция, которая генерирует календарь матчей на год вперед
     public function create_calendar()
     {
+        // Проверка количества команд на четность
         if($this->team_model->teams_count() % 2 == 1)
         {
             $this->load->view('header');
@@ -23,7 +25,7 @@ class Championship extends CI_Controller {
             return;
         }
         
-        // truncate таблиц прошлого календаря
+        // Чистка таблиц прошлого календаря
         $this->championship_model->clear_calendar();
         
         $start_date = new DateTime();   // Текущая дата, с которой начинается чемпионат
@@ -69,7 +71,6 @@ class Championship extends CI_Controller {
             // Переход к следующей неделе
             $start_date->modify('+1 week');
         }
-        
         redirect(site_url('championship'));
     }
     
@@ -190,9 +191,6 @@ class Championship extends CI_Controller {
         // Получаем все команды
         $teams = $this->team_model->get_all();
         
-        // массив для передачи во вьюшку
-        $data = array();
-        
         // Для каждой команды получаем количество игр, голов, выиграшей и т.п.
         foreach ($teams as $team)
         { 
@@ -256,7 +254,10 @@ class Championship extends CI_Controller {
             $data['table'][] = $team_info;
         }
         // Сортировка команд по очкам
-        usort($data['table'], array("Championship", "cmp"));
+        if(isset($data['table']))
+        {
+            usort($data['table'], array("Championship", "cmp"));
+        }
         $this->load->view('header');
         $this->load->view('league_table', $data);
         $this->load->view('footer');
